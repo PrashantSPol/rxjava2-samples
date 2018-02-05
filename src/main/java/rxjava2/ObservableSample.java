@@ -1,7 +1,8 @@
-package rxjava2._1_sample;
+package rxjava2;
 
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
@@ -11,7 +12,6 @@ import org.reactivestreams.Subscriber;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import rxjava2.common.DataSource;
 
 /* 
  * There are different ways to create observable
@@ -26,13 +26,13 @@ public class ObservableSample {
 		System.out.println("\n==========================\n");
 		
 		// if we have array of elements which can be used as a source of observable
-		Observable.fromArray(DataSource.arrayOfNumbers())
+		Observable.fromArray(new int[]{1, 2, 3, 4})
 					.subscribe(s -> System.out.print(" fromArray " + s));
 		
 		System.out.println("\n==========================\n");
 		
 		// Any iterable can be used, it might be List, Set etc
-		Observable.fromIterable(DataSource.listOfNumbers(1,  10))
+		Observable.fromIterable(Arrays.asList(new int[]{1, 2, 3, 4}))
 					.subscribe(s -> System.out.print(" fromIterable " + s));
 		
 		System.out.println("\n==========================\n");
