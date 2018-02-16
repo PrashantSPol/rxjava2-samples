@@ -9,15 +9,21 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 import rxjava2.common.Logger;
 
-public class FlowableOperators {
+public class SuppressingOperators {
 	public static void main(String[] args) throws InterruptedException {
 		//takeDemo();
+		//takeWhile();
+		//skipDemo();
+		//skipWhile();
+		//distinct();
+		//distinctUntilChanged();
 		//delayDemo();
 		//intervalDemo();
 		//scanDemo();
 		//reduceDemo();
 		//collectDemo();
-		deferDemo();
+		//deferDemo();
+		elementAt();
 	}
 	
 	/*
@@ -38,6 +44,67 @@ public class FlowableOperators {
 					   });
 		
 		System.out.println("=========================================================");
+	}
+	
+	/*
+	 * takeWhile() will pass emissions unless given condition is true
+	 */
+	static void takeWhile() {
+		Logger.log("Start takeWhileDemo");
+		Flowable<Integer> flowable = Flowable.just(1, 2, 3, 4, 5 , 4, 3, 1).takeWhile(i -> i < 5);
+		subscribe(flowable, null);
+	}
+	
+	/*
+	 * Similar to take(), but it skips given number of emissions and then start considering further emissions
+	 */
+	static void skipDemo() {
+		Logger.log("Start skipDemo");
+		Flowable<Integer> flowable = Flowable.range(1, 100)
+			.skip(90);
+		
+		subscribe(flowable, null);
+		System.out.println("=========================================================");
+	}
+	
+	/*
+	 * skipWhile() will skip emissions unless given condition is true
+	 */
+	static void skipWhile() {
+		Logger.log("Start skipWhileDemo");
+		Flowable<Integer> flowable = Flowable.just(1, 2, 3, 4, 5 , 4, 3, 1).skipWhile(i -> i < 5);
+		subscribe(flowable, null);
+	}
+	
+	/*
+	 * distinct() passes unique emissions based on key passed through the funciton argument
+	 */
+	static void distinct() {
+		Logger.log("Start distinctDemo");
+		Flowable.just("One", "Two", "Three", "Four", "Five")
+				.distinct(String::length)
+				.subscribe(s -> Logger.log("Received %s", s));
+		
+		System.out.println("=========================================================");
+	}
+	
+	/*
+	 * it won't emit if same value keeps on repeating
+	 */
+	static void distinctUntilChanged() {
+		Logger.log("Start distinctUntilChangedDemo");
+		Flowable.just(1, 1, 2, 2, 3, 3, 3, 2, 1)
+				.distinctUntilChanged()
+				.subscribe(s -> Logger.log("Received %s", s));
+
+		/*
+		 *  2018:18:44 14:32 Thread[main,5,main] Start distinctUntilChangedDemo 
+			2018:18:44 14:32 Thread[main,5,main] Received 1 
+			2018:18:44 14:32 Thread[main,5,main] Received 2 
+			2018:18:44 14:32 Thread[main,5,main] Received 3 
+			2018:18:44 14:32 Thread[main,5,main] Received 2 
+			2018:18:44 14:32 Thread[main,5,main] Received 1 
+		 */
 	}
 	
 	/*
@@ -174,6 +241,18 @@ public class FlowableOperators {
 		 * 2018:50:33 16:49 Thread[main,5,main] After creating second observable 
 		 * 2018:50:33 16:54 Thread[main,5,main]  Received 1 
 		 * 2018:50:33 16:54 Thread[main,5,main]  Completed 
+		 */
+	}
+	
+	/*
+	 * returns element at particular location
+	 */
+	static void elementAt() {
+		Flowable.just("One", "Two", "Three")
+		.elementAt(1)
+		.subscribe(s -> Logger.log("Received %s", s));
+		/*
+		 * 2018:50:44 14:22 Thread[main,5,main] Received Two 
 		 */
 	}
 	
